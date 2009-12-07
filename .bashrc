@@ -4,7 +4,7 @@
 
 #PS1="[\h]\u@\W#"
 #PS1='\[\033[01;31m\]\h \[\033[01;34m\]\W \$ \[\033[00m\]'
-#PS1='\[\033[01;32m\]\u@\h \[\033[01;34m\]\W \$ \[\033[00m\]'
+#PS1='\[\033[01;37m\]\u@\h \[\033[01;36m\]\W \$ \[\033[00m\]'
 
 [[ -f /etc/bash_completion ]] && source /etc/bash_completion
 
@@ -306,8 +306,13 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
 	PS1="${PS1}\[\033[01;32m\]\u@"
     fi
     #working dir basename and prompt
-    PS1="${PS1}\h \[\033[01;34m\]\W \$ \[\033[00m\]"
+    PS1="${PS1}\h \[\033[01;33m\]\W \$ \[\033[00m\]"
 #    ORIG_PS1="$PS1"
+fi
+
+#make eterm into xterm for emacs/ssh purposes
+if [[ "$TERM" = "eterm-color" ]]; then
+    export TERM="xterm-color"
 fi
 
 if [[ "`/usr/bin/whoami`" = 'root' ]]; then
@@ -346,3 +351,4 @@ fi
 
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
+source ~/ruby_switcher.sh
