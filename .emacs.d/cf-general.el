@@ -62,6 +62,18 @@
      (load "/usr/share/emacs/site-lisp/site-gentoo"))
 
 
+(let ((default-directory "~/.emacs.d/"))
+  (add-to-list 'load-path default-directory)
+  (normal-top-level-add-subdirs-to-load-path))
+ 
+(defun load-directory (dir)
+  (mapcar '(lambda (x)
+             (load-file x))
+          (directory-files dir t "\\.el$")))
+ 
+(load-directory "~/.emacs.d/autoload/")
+
+
 ;; Load paths
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
@@ -72,15 +84,8 @@
 (require 'linum)
 (global-linum-mode 1)
 
-(load-file "~/.emacs.d/lisp/pastie.el")
 
 
-;; make buffers that would have the same name be better named than default <n>
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'reverse)
-(setq uniquify-separator "|")
-(setq uniquify-after-kill-buffer-p t)
-(setq uniquify-ignore-buffers-re "^\\*")
 
 
 ;; some stuff that seems like it should work to turn off linum in term-mode, but doesn't
