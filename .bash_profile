@@ -18,7 +18,11 @@ done
 
 
 cf_date_check_notify
-
+alias reloadhosts="sudo niload -v -m hosts ."
+alias ls='ls $LS_OPTIONS -hF'
+eval `dircolors ~/DIR_COLORS`
+export LS_OPTIONS='--color=auto'
+    
 
 
 cf_check_for_updates
