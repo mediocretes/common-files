@@ -325,6 +325,9 @@ else
         export PATH="/bin:/usr/bin:${PATH}"
 fi
 
+#add mongo to path
+export PATH="/mongo/mongo-1.2.4/bin:${PATH}"
+
 [[ "$HOME" == "" ]] && export HOME=`grep -e "^[^:]*\:[^:]*\:$UID\:" /etc/passwd | awk -F ':' '{print $6}'`
 
 export BC_ENV_ARGS="$HOME/.bcrc"
