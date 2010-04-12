@@ -27,5 +27,10 @@ export LS_OPTIONS='--color=auto'
 
 cf_check_for_updates
 
+# Ruby Enterprise Edition
+alias rakeEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/rake"
+alias gemEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/gem"
+alias rubyEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/ruby"
+alias irbEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/irb"
 
 #testing

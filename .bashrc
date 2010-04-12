@@ -326,7 +326,7 @@ else
 fi
 
 #add mongo to path
-export PATH="/mongo/mongo-1.2.4/bin:${PATH}"
+export PATH="/mongo/mongo-1.4.0/bin:${PATH}"
 
 [[ "$HOME" == "" ]] && export HOME=`grep -e "^[^:]*\:[^:]*\:$UID\:" /etc/passwd | awk -F ':' '{print $6}'`
 
