@@ -35,6 +35,28 @@ alias bgup='(wget -O - http://cf.telaranrhiod.com/files/common/backgrounds.tbz2 
 alias md5='md5sum'
 alias glg='git lg'
 complete -o default -o nospace -F _git_log glg
+alias gcm='git commit -m'
+alias gca='git commit -a'
+alias gcam='git commit -a -m'
+alias gst='git status'
+alias gco="git checkout"
+complete -o default -o nospace -F _git_checkout gco
+alias gpul="git pull"
+complete -o default -o nospace -F _git_pull gpull
+alias gpsh="git push"
+complete -o default -o nospace -F _git_push gpush
+alias gd="git diff"
+complete -o default -o nospace -F _git_diff gd
+alias gbr="git branch"
+complete -o default -o nospace -F _git_branch gbr
+alias ga="git add"
+complete -o default -o nospace -F _git_add ga
+
+alias cuwork="cucumber ./features -t @shouldwork"
+alias cuwip="cucumber ./features -t @wip"
+alias cufail="cucumber ./features -t @shouldfail"
+alias cuke="cucumber ./features"
+
 alias ackp='ack --pager="less -r"'
 
 export CF_TARBALL_BACKUP="true"
@@ -295,12 +317,18 @@ shopt -s cdspell
 #let * match files beginning with '.' but since GLOBIGNORE is set above it won't match '.' or '..'
 shopt -s dotglob
 
+#make eterm into xterm for emacs/ssh purposes
+if [[ "$TERM" = "eterm-color" ]]; then
+    export CF_REAL_TERM=$TERM
+    export TERM="xterm-color"
+fi
+
 #build PS1
 #don't set PS1 for dumb terminals
 if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     PS1=''
     #don't modify titlebar on console
-    [[ "$TERM" != 'linux' && "$TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
+    [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
 #    [[ "$TERM" != 'linux' ]] && PS1="${PS1}\[\e]2;\u@\H:\W -- <cmd_time>\a"
     if [[ "`/usr/bin/whoami`" = "root" ]]; then
 	#red hostname
@@ -312,11 +340,6 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     #working dir basename and prompt
     PS1="${PS1}\h \[\033[01;33m\]\W \$ \[\033[00m\]"
 #    ORIG_PS1="$PS1"
-fi
-
-#make eterm into xterm for emacs/ssh purposes
-if [[ "$TERM" = "eterm-color" ]]; then
-    export TERM="xterm-color"
 fi
 
 if [[ "`/usr/bin/whoami`" = 'root' ]]; then
