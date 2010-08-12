@@ -187,12 +187,14 @@ vncvia() {
     fi
 }
 
+
 cf_cd() {
 #alias cd='pushd -n $PWD; cd'
     pushd -n "$PWD" &> /dev/null
     cd "$@" || popd -n &> /dev/null
 }
-alias cd='cf_cd' # put this below cf_cd so when cf_cd is read 'cd' isn't expanded making it recursive
+#alias cd='cf_cd' # put this below cf_cd so when cf_cd is read 'cd' isn't expanded making it recursive
+
 
 #min seconds between notifications of new common files.
 export CF_TIME_BETWEEN_NOTIFICATIONS=86400
@@ -209,12 +211,14 @@ cf_date_check_notify() {
 	[ -f $notification_message_path ] && cat $notification_message_path && echo "`date '+%s'`" > $last_notified_date_path
     fi
 }
-
 cf_get_latest_local_version() {
     #get your current revision number
+echo 'if'
     if which git &> /dev/null; then
-	      my_rev=`(cd $HOME && git log -1 --pretty=format:"%H %ad") 2> /dev/null`
+	      my_rev=`(git --git-dir=$HOME/.git log -1 --pretty=format:"%H %ad") 2> /dev/null`
+        echo $my_rev
     fi	
+echo 'fi'
 	  if [[ "$my_rev" == "" ]]; then
 	      #couldn't get version from svn so we'll try .common_files/latest_revision.txt
 	      my_rev=`cat "$HOME/.common_files/.latest_revision" 2> /dev/null`
@@ -222,16 +226,13 @@ cf_get_latest_local_version() {
 	  if [[ "$my_rev" == "" ]]; then
 	      return 1
 	  fi
-    
 	  CF_LOCAL_LATEST_VERSION=$my_rev
-    
 	  return 0
 }
 
 cf_get_latest_local_version
 CF_RUNNING_VERSION="$CF_LOCAL_LATEST_VERSION"
 CF_LOCAL_LATEST_VERSION="$CF_RUNNING_VERSION";
-
 cf_check_for_updates() {
 #first paren executes rest in subshell so we don't see the output from the job finishing
 #second peren and its & lump this block together and execute it in the background to it happens asynchronously and we don't hold up shell startup
