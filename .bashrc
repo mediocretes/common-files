@@ -187,14 +187,7 @@ vncvia() {
     fi
 }
 
-
-cf_cd() {
-#alias cd='pushd -n $PWD; cd'
-    pushd -n "$PWD" &> /dev/null
-    cd "$@" || popd -n &> /dev/null
-}
-#alias cd='cf_cd' # put this below cf_cd so when cf_cd is read 'cd' isn't expanded making it recursive
-
+alias cd='pushd -n $PWD &> /dev/null; cd'
 
 #min seconds between notifications of new common files.
 export CF_TIME_BETWEEN_NOTIFICATIONS=86400
