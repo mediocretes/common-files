@@ -188,7 +188,6 @@ vncvia() {
 }
 
 alias cd='pushd -n $PWD &> /dev/null; cd'
-=======
 
 cf_cd() {
 #alias cd='pushd -n $PWD; cd'
