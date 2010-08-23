@@ -35,3 +35,4 @@ alias irbEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/irb"
 
 #testing
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+rvm default
