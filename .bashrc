@@ -385,5 +385,8 @@ fi
 
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
+if [[ -s ~/.rvm/scripts/rvm ]]; then 
+  source ~/.rvm/scripts/rvm
+  rvm use default > /dev/null
+fi
 
-# source ~/ruby_switcher.sh
