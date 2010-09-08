@@ -187,7 +187,6 @@ vncvia() {
     fi
 }
 
-
 alias cd='pushd -n $PWD &> /dev/null; cd'
 
 cf_cd() {
@@ -196,6 +195,7 @@ cf_cd() {
     cd "$@" || popd -n &> /dev/null
 }
 #alias cd='cf_cd' # put this below cf_cd so when cf_cd is read 'cd' isn't expanded making it recursive
+
 
 #min seconds between notifications of new common files.
 export CF_TIME_BETWEEN_NOTIFICATIONS=86400
@@ -326,23 +326,25 @@ if [[ "$TERM" = "eterm-color" ]]; then
     export TERM="xterm-color"
 fi
 
+#add git branch to prompt
+
 #build PS1
 #don't set PS1 for dumb terminals
 if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     PS1=''
     #don't modify titlebar on console
     [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
-#    [[ "$TERM" != 'linux' ]] && PS1="${PS1}\[\e]2;\u@\H:\W -- <cmd_time>\a"
     if [[ "`/usr/bin/whoami`" = "root" ]]; then
-	#red hostname
-	PS1="${PS1}\[\033[01;31m\]"
+	    #red hostname
+	    PS1="${PS1}\[\033[01;31m\]"
     else
-	#green user@hostname
-	PS1="${PS1}\[\033[01;32m\]\u@"
+	    #green user@hostname
+	    PS1="${PS1}\[\033[01;32m\]\u@"
     fi
     #working dir basename and prompt
-    PS1="${PS1}\h \[\033[01;33m\]\W \$ \[\033[00m\]"
-#    ORIG_PS1="$PS1"
+    GIT_PS1_SHOWDIRTYSTATE=1
+    PS1="${PS1}\h \[\033[01;33m\]\W\[\033[01;31m\] \$(__git_ps1 "[%s]")\[\033[01;34m\] \$ \[\033[00m\]"
+    echo $(__git_ps1)
 fi
 
 if [[ "`/usr/bin/whoami`" = 'root' ]]; then
@@ -350,6 +352,8 @@ if [[ "`/usr/bin/whoami`" = 'root' ]]; then
 else
         export PATH="/bin:/usr/bin:${PATH}"
 fi
+
+ 
 
 #add mongo to path
 export PATH="/mongo/mongo-1.4.0/bin:${PATH}"
