@@ -326,8 +326,6 @@ if [[ "$TERM" = "eterm-color" ]]; then
     export TERM="xterm-color"
 fi
 
-#add git branch to prompt
-
 #build PS1
 #don't set PS1 for dumb terminals
 if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
@@ -344,7 +342,6 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     #working dir basename and prompt
     GIT_PS1_SHOWDIRTYSTATE=1
     PS1="${PS1}\h \[\033[01;33m\]\W\[\033[01;31m\] \$(__git_ps1 "[%s]")\[\033[01;34m\] \$ \[\033[00m\]"
-    echo $(__git_ps1)
 fi
 
 if [[ "`/usr/bin/whoami`" = 'root' ]]; then
