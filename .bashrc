@@ -329,6 +329,43 @@ battery_int(){
     echo "$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
 }
 
+ps1_username(){
+    if [[ "`/usr/bin/whoami`" = "root" ]]; then
+	    #red prompt
+	      echo "${FG_RED}\u"
+    else
+	    #green prompt
+	      echo "${FG_GREEN}\u"
+    fi
+}
+
+ps1_host_with_battery(){
+    BATTERY="$(battery_int)"
+    if [ "${BATTERY}" -gt 50 ];then
+        GOOD="\033[01;32m"
+        BAD="\033[01;33m"
+        BATTERY="(${BATTERY}-50)*2"
+    else
+        GOOD="\033[01;33m"
+        BAD="\033[01;31m"
+        BATTERY="${BATTERY}*2"
+    fi    
+    HOST="$(echo $HOSTNAME | sed 's/\..*//')"
+    HOST_LENGTH="`expr length ${HOST}`"    
+    let ILLUMINATE="${BATTERY}*${HOST_LENGTH}/100"
+    HOST_OUTPUT="${GOOD}${HOST:1:${ILLUMINATE}}${BAD}${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"
+    echo -e "${HOST_OUTPUT}"
+}
+
+FG_BLACK="\[\033[01;30m\]"
+FG_RED="\[\033[01;31m\]"
+FG_GREEN="\[\033[01;32m\]"
+FG_YELLOW="\[\033[01;33m\]"
+FG_BLUE="\[\033[01;34m\]"
+FG_VIOLET="\[\033[01;35m\]"
+FG_CYAN="\[\033[01;36m\]"
+FG_WHITE="\[\033[01;37m\]"
+
 #make eterm into xterm for emacs/ssh purposes
 if [[ "$TERM" = "eterm-color" ]]; then
     export CF_REAL_TERM=$TERM
@@ -338,29 +375,21 @@ fi
 #build PS1
 #don't set PS1 for dumb terminals
 if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
-    PS1=''
     #don't modify titlebar on console
     [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
-    if [[ "`/usr/bin/whoami`" = "root" ]]; then
-	    #red hostname
-	    PS1="${PS1}\[\033[01;31m\]"
-    else
-	    #green user@hostname
-	    PS1="${PS1}\[\033[01;32m\]\u@"
-    fi
-    #working dir basename and prompt
+ 
     GIT_PS1_SHOWDIRTYSTATE=1
-    PS1="${PS1}\h \[\033[01;33m\]\W\[\033[01;31m\] \$(__git_ps1 "[%s]")\[\033[01;34m\] \$ \[\033[00m\]"
-
-    #use battery data
-    if [ "$(battery_int)" -gt 75 ];then
-       PS1="\[\033[01;32m\]\$(battery) ${PS1}"
+    #here's the general idea:
+    #username (red if root), host, color coded as battery meter, bottom pwd in yellow, git branch[dirty?] in cyan
+    PS1="$(ps1_username)${FG_WHITE}@\$(ps1_host_with_battery) ${FG_YELLOW}\W${FG_CYAN} \$(__git_ps1 "[%s]")"
+    
+    #use a red $ if you're root, white otherwise
+    if [[ "`/usr/bin/whoami`" = "root" ]]; then
+	    #red prompt
+	      PS1="${PS1}${FG_RED} \$ ${FG_WHITE}"
     else
-        if [ "$(battery_int)" -gt 25 ];then
-            PS1="\[\033[01;33m\]\$(battery) ${PS1}"
-        else
-            PS1="\[\033[01;31m\]\$(battery) ${PS1}"
-        fi        
+	    #green prompt
+	      PS1="${PS1}${FG_WHITE} \$ "
     fi
 fi
 
@@ -368,9 +397,7 @@ if [[ "`/usr/bin/whoami`" = 'root' ]]; then
         export PATH="/bin:/sbin:/usr/bin:/usr/sbin:${ROOTPATH}"
 else
         export PATH="/bin:/usr/bin:${PATH}"
-fi
-
- 
+fi 
 
 #add mongo to path
 export PATH="/mongo/mongo-1.4.0/bin:${PATH}"
