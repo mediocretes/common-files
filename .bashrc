@@ -320,6 +320,9 @@ shopt -s cdspell
 #let * match files beginning with '.' but since GLOBIGNORE is set above it won't match '.' or '..'
 shopt -s dotglob
 
+#battery status in your prompt?  ostentatious
+BATTERY="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}')"
+BATTERY_INT="$(echo $BATTERY | sed 's/\...%//')"
 #make eterm into xterm for emacs/ssh purposes
 if [[ "$TERM" = "eterm-color" ]]; then
     export CF_REAL_TERM=$TERM
@@ -342,6 +345,17 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     #working dir basename and prompt
     GIT_PS1_SHOWDIRTYSTATE=1
     PS1="${PS1}\h \[\033[01;33m\]\W\[\033[01;31m\] \$(__git_ps1 "[%s]")\[\033[01;34m\] \$ \[\033[00m\]"
+
+    #use battery data
+    if [ "$BATTERY_INT" -gt "75" ];then
+        PS1="\[\033[01;32m\]${BATTERY} ${PS1}"
+    else
+        if [ "$BATTERY_INT" -gt "25" ];then
+            PS1="\[\033[01;33m\]${BATTERY} ${PS1}"
+        else
+            PS1="\[\033[01;31m\]${BATTERY} ${PS1}"
+        fi        
+    fi
 fi
 
 if [[ "`/usr/bin/whoami`" = 'root' ]]; then
