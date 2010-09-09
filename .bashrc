@@ -320,6 +320,16 @@ shopt -s cdspell
 #let * match files beginning with '.' but since GLOBIGNORE is set above it won't match '.' or '..'
 shopt -s dotglob
 
+FG_BLACK="\[\033[01;30m\]"
+FG_RED="\[\033[01;31m\]"
+FG_GREEN="\[\033[01;32m\]"
+FG_YELLOW="\[\033[01;33m\]"
+FG_BLUE="\[\033[01;34m\]"
+FG_VIOLET="\[\033[01;35m\]"
+FG_CYAN="\[\033[01;36m\]"
+FG_WHITE="\[\033[01;37m\]"
+WHOAMI="`/usr/bin/whoami`"
+
 #battery status in your prompt?  ostentatious
 battery(){
     echo "$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}')"
@@ -330,7 +340,7 @@ battery_int(){
 }
 
 ps1_username(){
-    if [[ "`/usr/bin/whoami`" = "root" ]]; then
+    if [[ $WHOAMI = "root" ]]; then
 	    #red prompt
 	      echo "${FG_RED}\u"
     else
@@ -341,7 +351,7 @@ ps1_username(){
 
 ps1_host_with_battery(){
     BATTERY="$(battery_int)"
-    if [ "${BATTERY}" -gt 50 ];then
+    if [ $BATTERY -gt 50 ];then
         GOOD="\033[01;32m"
         BAD="\033[01;33m"
         BATTERY="(${BATTERY}-50)*2"
@@ -350,21 +360,20 @@ ps1_host_with_battery(){
         BAD="\033[01;31m"
         BATTERY="${BATTERY}*2"
     fi    
-    HOST="$(echo $HOSTNAME | sed 's/\..*//')"
+    HOST="${WHOAMI}@$(echo $HOSTNAME | sed 's/\..*//')"
     HOST_LENGTH="`expr length ${HOST}`"    
-    let ILLUMINATE="${BATTERY}*${HOST_LENGTH}/100"
-    HOST_OUTPUT="${GOOD}${HOST:1:${ILLUMINATE}}${BAD}${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"
-    echo -e "${HOST_OUTPUT}"
+    ILLUMINATE=$BATTERY*$HOST_LENGTH/100
+    echo -e "${GOOD}${HOST:0:${ILLUMINATE}}${BAD}${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"
 }
 
-FG_BLACK="\[\033[01;30m\]"
-FG_RED="\[\033[01;31m\]"
-FG_GREEN="\[\033[01;32m\]"
-FG_YELLOW="\[\033[01;33m\]"
-FG_BLUE="\[\033[01;34m\]"
-FG_VIOLET="\[\033[01;35m\]"
-FG_CYAN="\[\033[01;36m\]"
-FG_WHITE="\[\033[01;37m\]"
+last_2_pwd(){
+    tmp=${PWD%/*/*}
+    [ ${#tmp} -gt 0 -a "$tmp" != "$PWD" ] && echo ${PWD:${#tmp}+1} || echo $PWD
+}
+
+nice_pwd(){
+    echo "$(last_2_pwd | sed -e s/\\\/Users\\\/${WHOAMI}/~/ | sed -e s/${WHOAMI}/~/)"
+}
 
 #make eterm into xterm for emacs/ssh purposes
 if [[ "$TERM" = "eterm-color" ]]; then
@@ -380,11 +389,10 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
  
     GIT_PS1_SHOWDIRTYSTATE=1
     #here's the general idea:
-    #username (red if root), host, color coded as battery meter, bottom pwd in yellow, git branch[dirty?] in cyan
-    PS1="$(ps1_username)${FG_WHITE}@\$(ps1_host_with_battery) ${FG_YELLOW}\W${FG_CYAN} \$(__git_ps1 "[%s]")"
+    PS1="\$(ps1_host_with_battery) ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")"
     
     #use a red $ if you're root, white otherwise
-    if [[ "`/usr/bin/whoami`" = "root" ]]; then
+    if [[ $WHOAMI = "root" ]]; then
 	    #red prompt
 	      PS1="${PS1}${FG_RED} \$ ${FG_WHITE}"
     else
@@ -393,7 +401,7 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     fi
 fi
 
-if [[ "`/usr/bin/whoami`" = 'root' ]]; then
+if [[ $WHOAMI = 'root' ]]; then
         export PATH="/bin:/sbin:/usr/bin:/usr/sbin:${ROOTPATH}"
 else
         export PATH="/bin:/usr/bin:${PATH}"
