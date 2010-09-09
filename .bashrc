@@ -353,10 +353,10 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     PS1="${PS1}\h \[\033[01;33m\]\W\[\033[01;31m\] \$(__git_ps1 "[%s]")\[\033[01;34m\] \$ \[\033[00m\]"
 
     #use battery data
-    if [ "$(battery_int)" -gt "75" ];then
+    if [ "$(battery_int)" -gt 75 ];then
        PS1="\[\033[01;32m\]\$(battery) ${PS1}"
     else
-        if [ "$(battery_int)" -gt "25" ];then
+        if [ "$(battery_int)" -gt 25 ];then
             PS1="\[\033[01;33m\]\$(battery) ${PS1}"
         else
             PS1="\[\033[01;31m\]\$(battery) ${PS1}"
