@@ -329,13 +329,11 @@ FG_VIOLET="\[\033[01;35m\]"
 FG_CYAN="\[\033[01;36m\]"
 FG_WHITE="\[\033[01;37m\]"
 WHOAMI="`/usr/bin/whoami`"
+HOST="${WHOAMI}@$(echo $HOSTNAME | sed 's/\..*//')"
 
-#battery status in your prompt?  ostentatious
-battery(){
-    echo "$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}')"
-}
 
-battery_int(){
+#a battery gauge, in MY prompt?  It's more likely than you'd think
+battery_int(){    
     echo "$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
 }
 
@@ -349,21 +347,42 @@ ps1_username(){
     fi
 }
 
-ps1_host_with_battery(){
-    BATTERY="$(battery_int)"
+function green_host()
+{
+    HOST_LENGTH=`expr length $HOST`
+    BATTERY=`battery_int`
     if [ $BATTERY -gt 50 ];then
-        GOOD="\033[01;32m"
-        BAD="\033[01;33m"
-        BATTERY="(${BATTERY}-50)*2"
-    else
-        GOOD="\033[01;33m"
-        BAD="\033[01;31m"
-        BATTERY="${BATTERY}*2"
+        MYBATTERY=($BATTERY-50)*2
+        ILLUMINATE=$MYBATTERY*$HOST_LENGTH/100
+        echo "${HOST:0:${ILLUMINATE}}"
+        export YELLOW="omg"
     fi    
-    HOST="${WHOAMI}@$(echo $HOSTNAME | sed 's/\..*//')"
-    HOST_LENGTH="`expr length ${HOST}`"    
-    ILLUMINATE=$BATTERY*$HOST_LENGTH/100
-    echo -e "${GOOD}${HOST:0:${ILLUMINATE}}${BAD}${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"
+}
+function yellow_host()
+{
+    HOST_LENGTH=`expr length $HOST`
+    BATTERY=`battery_int`
+    if [ $BATTERY -gt 50 ];then
+        MYBATTERY=($BATTERY-50)*2
+        ILLUMINATE=$MYBATTERY*$HOST_LENGTH/100
+        echo "${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"
+    else
+        MYBATTERY=${BATTERY}*2
+        ILLUMINATE=$MYBATTERY*$HOST_LENGTH/100
+        echo "${HOST:0:${ILLUMINATE}}"        
+    fi    
+}
+function red_host()
+{
+    HOST_LENGTH=`expr length $HOST`
+    BATTERY=`battery_int`
+    if [ $BATTERY -gt 50 ];then
+        echo ""
+    else
+        MYBATTERY=${BATTERY}*2
+        ILLUMINATE=$MYBATTERY*$HOST_LENGTH/100
+        echo "${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"      
+    fi    
 }
 
 last_2_pwd(){
@@ -372,7 +391,7 @@ last_2_pwd(){
 }
 
 nice_pwd(){
-    echo "$(last_2_pwd | sed -e s/\\\/Users\\\/${WHOAMI}/~/ | sed -e s/${WHOAMI}/~/)"
+    echo  "$(last_2_pwd | sed -e s/\\\/Users\\\/${WHOAMI}/~/ | sed -e s/${WHOAMI}/~/)"
 }
 
 #make eterm into xterm for emacs/ssh purposes
@@ -388,9 +407,8 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
  
     GIT_PS1_SHOWDIRTYSTATE=1
-    #here's the general idea:
-    PS1="\$(ps1_host_with_battery) ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")"
-    
+    #have to specify colors here or else bash wrapping gets feisty
+    PS1="${FG_GREEN}\$(green_host)${FG_YELLOW}\$(yellow_host)${FG_RED}\$(red_host) ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")"
     #use a red $ if you're root, white otherwise
     if [[ $WHOAMI = "root" ]]; then
 	    #red prompt
