@@ -296,7 +296,7 @@ cf_prompt_command() {
     [[ "`declare -f cf_user_prompt_hook`" != "" ]] && cf_user_prompt_hook
     SAVE_COLOR="\033[01;31m"
     BATTERY="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
-    
+    BATTERY=$SET_BATT
     HOST_LENGTH="`expr length ${HOST}`"    
     ILLUMINATE=$BATTERY*$HOST_LENGTH/100
 
@@ -390,7 +390,7 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
  
     GIT_PS1_SHOWDIRTYSTATE=1
     
-    PS1="${FG_GREEN}${GREEN_PART}${FG_YELLOW}${YELLOW_PART}${FG_RED}${RED_PART} ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")\$(svn_crap)"
+    PS1="${FG_GREEN}\${GREEN_PART}${FG_YELLOW}\${YELLOW_PART}${FG_RED}\${RED_PART} ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")\$(svn_crap)"
     
     
     #use a red $ if you're root, white otherwise
