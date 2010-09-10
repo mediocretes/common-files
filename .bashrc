@@ -294,7 +294,23 @@ cf_prompt_command() {
     [[ "$CF_RUNNING_VERSION" != "$CF_LOCAL_LATEST_VERSION" ]] && exec bash
 #    cf_long_running_task_check
     [[ "`declare -f cf_user_prompt_hook`" != "" ]] && cf_user_prompt_hook
+    SAVE_COLOR="\033[01;31m"
+    BATTERY="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
+    
+    HOST_LENGTH="`expr length ${HOST}`"    
+    ILLUMINATE=$BATTERY*$HOST_LENGTH/100
+
+    if [ $BATTERY -gt 50 ];then
+        GREEN_PART=${HOST:0:${ILLUMINATE}}
+        YELLOW_PART=${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}
+        RED_PART=""
+    else
+        YELLOW_PART=${HOST:0:${ILLUMINATE}}
+        RED_PART=${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}
+        GREEN_PART=""
+    fi    
 }
+
 
 
 #export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;
@@ -337,17 +353,6 @@ function battery_int(){
     echo "$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
 }
 
-function ps1_username(){
-    
-    if [[ $WHOAMI = "root" ]]; then
-	    #red prompt
-	      echo "${FG_RED}\u"
-    else
-	    #green prompt
-	      echo "${FG_GREEN}\u"
-    fi
-}
-
 last_2_pwd(){
     tmp=${PWD%/*/*}
     [ ${#tmp} -gt 0 -a "$tmp" != "$PWD" ] && echo ${PWD:${#tmp}+1} || echo $PWD
@@ -357,20 +362,17 @@ nice_pwd(){
     echo  "$(last_2_pwd | sed -e s/\\\/Users\\\/${WHOAMI}/~/ | sed -e s/${WHOAMI}/~/)"
 }
 
-ps1_host_with_battery(){
-    BATTERY="$(battery_int)"
-    if [ $BATTERY -gt 50 ];then
-        GOOD="\033[01;32m"
-        BAD="\033[01;33m"
-        BATTERY="(${BATTERY}-50)*2"
-    else
-        GOOD="\033[01;33m"
-        BAD="\033[01;31m"
-        BATTERY="${BATTERY}*2"
-    fi    
-    HOST_LENGTH="`expr length ${HOST}`"    
-    ILLUMINATE=$BATTERY*$HOST_LENGTH/100
-    echo -e "${GOOD}${HOST:0:${ILLUMINATE}}${BAD}${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}"
+svn_crap(){
+    if [ `ls -a | grep .svn | wc -l` != 0 ];then
+        REVISION=`svn info | grep Revision | sed -e 's/Revision: //'`
+        MODS=`svn status | grep ^[^?] | wc -l`
+        if [ $MODS -gt 0 ];then
+            echo -ne "${REVISION}+${MODS}"            
+        else
+            echo -ne "${REVISION}"
+        fi
+        
+    fi
 }
 
 
@@ -387,8 +389,10 @@ if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
     [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
  
     GIT_PS1_SHOWDIRTYSTATE=1
-    #have to specify colors here or else bash wrapping gets feisty
-    PS1="\[\$(ps1_host_with_battery) ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")\]"
+    
+    PS1="${FG_GREEN}${GREEN_PART}${FG_YELLOW}${YELLOW_PART}${FG_RED}${RED_PART} ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")\$(svn_crap)"
+    
+    
     #use a red $ if you're root, white otherwise
     if [[ $WHOAMI = "root" ]]; then
 	    #red prompt
