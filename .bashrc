@@ -294,17 +294,20 @@ cf_prompt_command() {
     [[ "$CF_RUNNING_VERSION" != "$CF_LOCAL_LATEST_VERSION" ]] && exec bash
 #    cf_long_running_task_check
     [[ "`declare -f cf_user_prompt_hook`" != "" ]] && cf_user_prompt_hook
-    SAVE_COLOR="\033[01;31m"
-    BATTERY="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
-    
-    HOST_LENGTH="`expr length ${HOST}`"    
-    ILLUMINATE=$BATTERY*$HOST_LENGTH/100
+    BATTERY_PERCENT="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}')"
+    let BATTERY="$(echo -n ${BATTERY_PERCENT} | sed 's/\...%//')"
+    #does your computer report 99.5% instead of 100%?  You might find the following more useful than sed rounding.
+    #let BATTERY="$(echo -n ${BATTERY_PERCENT} | sed 's/[^0-9]//g')"
+    let HOST_LENGTH="`expr length ${HOST}`"    
 
+    
     if [ $BATTERY -gt 50 ];then
+        ILLUMINATE=($BATTERY-50)*$HOST_LENGTH/50
         GREEN_PART=${HOST:0:${ILLUMINATE}}
         YELLOW_PART=${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}
         RED_PART=""
     else
+        ILLUMINATE=(2*$BATTERY*$HOST_LENGTH)/100
         YELLOW_PART=${HOST:0:${ILLUMINATE}}
         RED_PART=${HOST:${ILLUMINATE}:${HOST_LENGTH}-${ILLUMINATE}}
         GREEN_PART=""
