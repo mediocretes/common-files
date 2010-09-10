@@ -296,7 +296,7 @@ cf_prompt_command() {
     [[ "`declare -f cf_user_prompt_hook`" != "" ]] && cf_user_prompt_hook
     SAVE_COLOR="\033[01;31m"
     BATTERY="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
-    BATTERY=$SET_BATT
+    
     HOST_LENGTH="`expr length ${HOST}`"    
     ILLUMINATE=$BATTERY*$HOST_LENGTH/100
 
