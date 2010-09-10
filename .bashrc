@@ -198,7 +198,7 @@ cf_cd() {
 
 
 #min seconds between notifications of new common files.
-export CF_TIME_BETWEEN_NOTIFICATIONS=86400
+export CF_TIME_BETWEEN_NOTIFICATIONS=100 #86400
 last_notified_date_path="$HOME/.common_files/.out_of_date_last_notified_date"
 notification_message_path="$HOME/.common_files/.out_of_date_notification_message"
 
@@ -215,7 +215,7 @@ cf_date_check_notify() {
 cf_get_latest_local_version() {
     #get your current revision number
     if which git &> /dev/null; then
-	      my_rev=`(git --git-dir=$HOME/.git log -1 --pretty=format:"%H %ad") 2> /dev/null`
+	      my_rev=`(git --git-dir=$HOME/.git log -1 --pretty=format:"%H") 2> /dev/null`
     fi	
 	  if [[ "$my_rev" == "" ]]; then
 	      #couldn't get version from svn so we'll try .common_files/latest_revision.txt
@@ -239,7 +239,9 @@ cf_check_for_updates() {
 #make sure you have curl and svn
         if which git curl &> /dev/null; then
             #get the latest revision number, this should just be an integer.
-            latest=`curl -sL http://cf.telaranrhiod.com/files/common/latest_revision.txt`
+            #latest=`curl -sL http://cf.telaranrhiod.com/files/common/latest_revision.txt`
+            latest=`curl -sL http://github.com/api/v2/yaml/repos/show/naginata/common-files/branches | grep master | sed -e 's/master: //'`
+
             #make sure curl returned successfully
             if [[ "$?" == "0" ]]; then
                 #	my_rev="`cf_get_latest_local_version`"
@@ -261,7 +263,7 @@ cf_check_for_updates() {
 }
 
 #min seconds between checking for new common files.
-export CF_TIME_BETWEEN_UPDATES=86400
+export CF_TIME_BETWEEN_UPDATES=100
 
 cf_date_check_for_updates() {
     last_checked_for_updates_date_path="$HOME/.common_files/.last_checked_date"
@@ -269,8 +271,8 @@ cf_date_check_for_updates() {
     [ -f $last_checked_for_updates_date_path ] && last_date=`cat $last_checked_for_updates_date_path`
     let "new_date = $last_date + $CF_TIME_BETWEEN_UPDATES"
     if [[ "$new_date" -lt "`date '+%s'`" ]]; then
-	cf_check_for_updates
-	echo "`date '+%s'`" > $last_checked_for_updates_date_path
+	      cf_check_for_updates
+	      echo "`date '+%s'`" > $last_checked_for_updates_date_path
     fi
 }
 
