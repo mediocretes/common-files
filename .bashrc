@@ -198,7 +198,7 @@ cf_cd() {
 
 
 #min seconds between notifications of new common files.
-export CF_TIME_BETWEEN_NOTIFICATIONS=100 #86400
+export CF_TIME_BETWEEN_NOTIFICATIONS=86400
 last_notified_date_path="$HOME/.common_files/.out_of_date_last_notified_date"
 notification_message_path="$HOME/.common_files/.out_of_date_notification_message"
 
@@ -252,7 +252,7 @@ cf_check_for_updates() {
                 my_hash=`echo $my_rev | awk '{print $1}'`
 	              if [[ "$latest_hash" != "$my_hash" ]]; then 
               	    #if not, create the .out_of_date file with the appropriate message so next time you start a terminal we can alert you.
-	                  echo "Not on latest revision of common_files.  Latest: $latest, yours: $my_rev" > $notification_message_path
+	                  echo "You have deviated from nfork/master.  Remote: $latest, You: $my_rev" > $notification_message_path
 	              else
               	    #if you're up to date we don't need this file
 	                  [ -f $notification_message_path ] && rm $notification_message_path
@@ -263,7 +263,7 @@ cf_check_for_updates() {
 }
 
 #min seconds between checking for new common files.
-export CF_TIME_BETWEEN_UPDATES=100
+export CF_TIME_BETWEEN_UPDATES=86400
 
 cf_date_check_for_updates() {
     last_checked_for_updates_date_path="$HOME/.common_files/.last_checked_date"
