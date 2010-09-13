@@ -341,14 +341,14 @@ shopt -s cdspell
 #let * match files beginning with '.' but since GLOBIGNORE is set above it won't match '.' or '..'
 shopt -s dotglob
 
-FG_BLACK="\[\033[01;30m\]"
-FG_RED="\[\033[01;31m\]"
-FG_GREEN="\[\033[01;32m\]"
-FG_YELLOW="\[\033[01;33m\]"
-FG_BLUE="\[\033[01;34m\]"
-FG_VIOLET="\[\033[01;35m\]"
-FG_CYAN="\[\033[01;36m\]"
-FG_WHITE="\[\033[01;37m\]"
+FG_BLACK="\[\033[00;30m\]"
+FG_RED="\[\033[00;31m\]"
+FG_GREEN="\[\033[00;32m\]"
+FG_YELLOW="\[\033[00;33m\]"
+FG_BLUE="\[\033[00;34m\]"
+FG_VIOLET="\[\033[00;35m\]"
+FG_CYAN="\[\033[00;36m\]"
+FG_WHITE="\[\033[00;37m\]"
 WHOAMI="`/usr/bin/whoami`"
 HOST="${WHOAMI}@$(echo $HOSTNAME | sed 's/\..*//')"
 
@@ -415,7 +415,7 @@ else
 fi 
 
 #add mongo to path
-export PATH="/mongo/mongo-1.4.0/bin:${PATH}"
+export PATH="/mongo/current/bin:${PATH}"
 
 [[ "$HOME" == "" ]] && export HOME=`grep -e "^[^:]*\:[^:]*\:$UID\:" /etc/passwd | awk -F ':' '{print $6}'`
 
