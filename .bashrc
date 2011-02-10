@@ -390,25 +390,30 @@ fi
 
 #build PS1
 #don't set PS1 for dumb terminals
-
 if [[ "$TERM" != 'dumb' ]] && [[ -n "$BASH" ]]; then
-    PS1=''
     #don't modify titlebar on console
     [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
-
-    #use a red $ if you're root, white otherwise
-    if [[ $WHOAMI = "root" ]]; then
-    	  #red hostname
-	      PS1="${PS1}${FG_RED}\u@"
-    else
-      	#green user@hostname
-     	  PS1="${PS1}${FG_GREEN}\u@"
-    fi
  
     GIT_PS1_SHOWDIRTYSTATE=1
-    #working dir basename and prompt
-    PS1="${PS1}\h ${FG_RED}\$(__git_ps1 "[%s]") ${FG_BLUE}\W ${FG_BLUE}\$ ${FG_WHITE}"
+    
+    PS1="${FG_GREEN}\${GREEN_PART}${FG_YELLOW}\${YELLOW_PART}${FG_RED}\${RED_PART} ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")\$(svn_crap)"
+    
+    
+    #use a red $ if you're root, white otherwise
+    if [[ $WHOAMI = "root" ]]; then
+#red prompt
+PS1="${PS1}${FG_RED} \$ ${FG_WHITE}"
+    else
+#green prompt
+PS1="${PS1}${FG_WHITE} \$ "
+    fi
 fi
+
+if [[ $WHOAMI = 'root' ]]; then
+        export PATH="/bin:/sbin:/usr/bin:/usr/sbin:${ROOTPATH}"
+else
+        export PATH="/bin:/usr/bin:${PATH}"
+fi 
 
 #make eterm into xterm for emacs/ssh purposes
 if [[ "$TERM" = "eterm-color" ]]; then
