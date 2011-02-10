@@ -15,8 +15,6 @@ for k in /usr/bin/keychain /opt/local/bin/keychain; do
 done
 [ -f ~/.keychain/$HOSTNAME-sh ] && source ~/.keychain/$HOSTNAME-sh > /dev/null
 
-
-
 cf_date_check_notify
 alias reloadhosts="sudo niload -v -m hosts ."
 alias ls='ls $LS_OPTIONS -hF'
@@ -24,15 +22,13 @@ eval `dircolors ~/DIR_COLORS`
 export LS_OPTIONS='--color=auto'
     
 
-
-cf_check_for_updates
-
 # Ruby Enterprise Edition
 alias rakeEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/rake"
 alias gemEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/gem"
 alias rubyEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/ruby"
 alias irbEE="/opt/ruby-enterprise-1.8.7-2010.01/bin/irb"
 
-#testing
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-rvm default
+cf_check_for_updates
+
+if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
+

@@ -24,7 +24,8 @@
 ;;If you want files with a particular ending to always start in a particular
 ;;mode, this is the place to put them.
 ;;
-(setq auto-mode-alist (append '(("\\.ss$" . scheme-mode)
+(setq auto-mode-alist (append '(
+        ("\\.ss$" . scheme-mode)
 				("\\.t$" . text-mode)
 				("\\.doc$" . text-mode)
 				("\\.tex$" . latex-mode)
@@ -42,13 +43,17 @@
 				("\\.cl$" . lisp-mode)
 				("\\.tpl$" . html-mode)
 				("\\.rb$" . ruby-mode)
+        ("\\.prawn" . ruby-mode)
 				("\\.Gemfile$" . ruby-mode)
 				("\\.Capfile$" . ruby-mode)
 				("\\.gemspec$" . ruby-mode)
+        ("\\Gemfile$" . ruby-mode)
 				("\\.sass$" . sass-mode)
+				("\\.scss$" . sass-mode)
 				("\\.haml$" . haml-mode)
-				("\\.feature$" . feature-mode))         
-			      auto-mode-alist))
+				("\\.feature$" . feature-mode)
+				("\\.org$" . org-mode)
+          ) auto-mode-alist))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Load Paths
@@ -67,6 +72,58 @@
 (let ((default-directory "~/.emacs.d/"))
   (add-to-list 'load-path default-directory)
   (normal-top-level-add-subdirs-to-load-path))
+
+
+;; moved to before autoload so it's easier to override the default call to it
+(defun mac-toggle-max-window ()
+  (interactive)
+  (set-frame-parameter nil 'fullscreen (if (frame-parameter nil 'fullscreen)
+                                           nil
+                                           'fullboth))) 
+
+(defun arrange-frame (w h &optional nosplit)
+  "Rearrange the current frame to a custom width and height and split unless prefix."
+  (let ((frame (selected-frame)))
+    (when (equal 'mac (framep frame))
+      (delete-other-windows)
+      (set-frame-position frame 5 25)
+      (set-frame-size frame w h)
+      (if (not nosplit)
+          (split-window-horizontally)))))
+
+(defun my-set-mac-font (name  size)
+  (interactive
+   (list (completing-read "font-name: "
+                          (mapcar (lambda (p) (list (car p) (car p)))
+                                  (x-font-family-list)) nil t)
+         (read-number "size: " 12)))
+  (set-face-attribute 'default nil
+                      :family name
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height (* 10 size))
+  (frame-parameter nil 'font))
+
+(defun medium (&optional nosplit)
+  "Create a two-pane window suitable for coding on a macbook."
+  (interactive "P")
+  (my-set-mac-font "espresso" 14)
+  (arrange-frame 170 45 nosplit))
+
+(defun projector (&optional nosplit)
+  "Create a large window suitable for coding on a macbook."
+  (interactive "P")
+  (my-set-mac-font "inconsolata" 20)
+  (arrange-frame 170 45 nosplit))
+
+
+(defun presentation ()
+  "Create a giant font window suitable for doing live demos."
+  (interactive)
+  (arrange-frame 85 25 t)
+  (my-set-mac-font "expresso" 22))
+
  
 (defun load-directory (dir)
   (mapcar '(lambda (x)
@@ -593,60 +650,11 @@
 (fset 'send-to-scheme
    "\C-@\C-[\C-f\C-e\C-[w\C-xo\C-y\C-m\C-xo\C-e\C-[OC")
 
-(defun mac-toggle-max-window ()
-  (interactive)
-  (set-frame-parameter nil 'fullscreen (if (frame-parameter nil 'fullscreen)
-                                           nil
-                                           'fullboth))) 
 
 
 
 
-(defun arrange-frame (w h &optional nosplit)
-  "Rearrange the current frame to a custom width and height and split unless prefix."
-  (let ((frame (selected-frame)))
-    (when (equal 'mac (framep frame))
-      (delete-other-windows)
-      (set-frame-position frame 5 25)
-      (set-frame-size frame w h)
-      (if (not nosplit)
-          (split-window-horizontally)))))
 
-(defun my-set-mac-font (name  size)
-  (interactive
-   (list (completing-read "font-name: "
-                          (mapcar (lambda (p) (list (car p) (car p)))
-                                  (x-font-family-list)) nil t)
-         (read-number "size: " 12)))
-  (set-face-attribute 'default nil
-                      :family name
-                      :slant  'normal
-                      :weight 'normal
-                      :width  'normal
-                      :height (* 10 size))
-  (frame-parameter nil 'font))
-
-
-
-
-(defun medium (&optional nosplit)
-  "Create a large window suitable for coding on a macbook."
-  (interactive "P")
-  (my-set-mac-font "inconsolata2" 15)
-  (arrange-frame 170 45 nosplit))
-
-(defun projector (&optional nosplit)
-  "Create a large window suitable for coding on a macbook."
-  (interactive "P")
-  (my-set-mac-font "inconsolata" 20)
-  (arrange-frame 170 45 nosplit))
-
-
-(defun presentation ()
-  "Create a giant font window suitable for doing live demos."
-  (interactive)
-  (arrange-frame 85 25 t)
-  (my-set-mac-font "bitstream vera sans mono" 24))
 
 (defun reload-file ()
   (interactive)
@@ -661,3 +669,7 @@
 (recentf-mode 1)
 (setq recentf-max-menu-items 100)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+(defun word-count nil "Count words in buffer" (interactive)
+(shell-command-on-region (point-min) (point-max) "wc -w"))
+

@@ -2,10 +2,6 @@
 # or not.  This file *should generate no output* or it will break the
 # scp and rcp commands.
 
-#PS1="[\h]\u@\W#"
-#PS1='\[\033[01;31m\]\h \[\033[01;34m\]\W \$ \[\033[00m\]'
-#PS1='\[\033[01;37m\]\u@\h \[\033[01;36m\]\W \$ \[\033[00m\]'
-
 [[ -f /etc/bash_completion ]] && source /etc/bash_completion
 [[ -f $HOME/.bash_completions/git-completion ]] && source $HOME/.bash_completions/git-completion
 
@@ -32,14 +28,21 @@ alias sls='screen -ls'
 alias sw='screen -wipe'
 #alias cfup='((svn info &> /dev/null && svn up) || (echo; echo -n "svn repository not detected, use tbz2? [Y,n]: "; read y; [ "$y" == "" -o "$y" == "y" -o "$y" == "Y" ] && (wget -O - http://cf.telaranrhiod.com/files/common/common_files.tbz2 | tar -xjov --no-same-permissions ./))); exec bash'
 alias bgup='(wget -O - http://cf.telaranrhiod.com/files/common/backgrounds.tbz2 | tar -xjov --no-same-permissions -C ~/.fluxbox/backgrounds/)'
+alias pgrep='pgrep -iL'
 which md5 &> /dev/null || alias md5='md5sum'
+alias g='git'
+alias g{='git stash'
+alias g}='git stash apply'
 alias glg='git lg'
 complete -o default -o nospace -F _git_log glg
 alias gcm='git commit -m'
+alias gc="git commit"
 alias gca='git commit -a'
 alias gcam='git commit -a -m'
+alias gs='git status'
 alias gst='git status'
 alias gco="git checkout"
+alias gpp="git pull && git push"
 complete -o default -o nospace -F _git_checkout gco
 alias gpul="git pull"
 complete -o default -o nospace -F _git_pull gpull
@@ -190,7 +193,6 @@ vncvia() {
 alias cd='pushd -n $PWD &> /dev/null; cd'
 
 cf_cd() {
-#alias cd='pushd -n $PWD; cd'
     pushd -n "$PWD" &> /dev/null
     cd "$@" || popd -n &> /dev/null
 }
@@ -380,7 +382,6 @@ svn_crap(){
     fi
 }
 
-
 #make eterm into xterm for emacs/ssh purposes
 if [[ "$TERM" = "eterm-color" ]]; then
     export CF_REAL_TERM=$TERM
@@ -389,23 +390,29 @@ fi
 
 #build PS1
 #don't set PS1 for dumb terminals
-if [[ "$TERM" != 'dumb'  ]] && [[ -n "$BASH" ]]; then
+
+if [[ "$TERM" != 'dumb' ]] && [[ -n "$BASH" ]]; then
+    PS1=''
     #don't modify titlebar on console
     [[ "$TERM" != 'linux' && "$CF_REAL_TERM" != "eterm-color" ]] && PS1="${PS1}\[\e]2;\u@\H:\W\a"
- 
-    GIT_PS1_SHOWDIRTYSTATE=1
-    
-    PS1="${FG_GREEN}\${GREEN_PART}${FG_YELLOW}\${YELLOW_PART}${FG_RED}\${RED_PART} ${FG_YELLOW}\$(nice_pwd)${FG_CYAN} \$(__git_ps1 "[%s]")\$(svn_crap)"
-    
-    
+
     #use a red $ if you're root, white otherwise
     if [[ $WHOAMI = "root" ]]; then
-	    #red prompt
-	      PS1="${PS1}${FG_RED} \$ ${FG_WHITE}"
+    	  #red hostname
+	      PS1="${PS1}${FG_RED}\u@"
     else
-	    #green prompt
-	      PS1="${PS1}${FG_WHITE} \$ "
+      	#green user@hostname
+     	  PS1="${PS1}${FG_GREEN}\u@"
     fi
+ 
+    GIT_PS1_SHOWDIRTYSTATE=1
+    #working dir basename and prompt
+    PS1="${PS1}\h ${FG_RED}\$(__git_ps1 "[%s]") ${FG_BLUE}\W ${FG_BLUE}\$ ${FG_WHITE}"
+fi
+
+#make eterm into xterm for emacs/ssh purposes
+if [[ "$TERM" = "eterm-color" ]]; then
+    export TERM="xterm-color"
 fi
 
 if [[ $WHOAMI = 'root' ]]; then
@@ -452,3 +459,5 @@ if [[ -s ~/.rvm/scripts/rvm ]]; then
   rvm use default > /dev/null
 fi
 
+
+[ -f ~/.bundler-exec.sh ] && source ~/.bundler-exec.sh
