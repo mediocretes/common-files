@@ -105,11 +105,16 @@
                       :height (* 10 size))
   (frame-parameter nil 'font))
 
-(defun medium (&optional nosplit)
+(defun macbook (&optional nosplit)
   "Create a two-pane window suitable for coding on a macbook."
   (interactive "P")
   (my-set-mac-font "espresso" 14)
   (arrange-frame 170 45 nosplit))
+
+(defun macbook-desk (&optional nosplit)
+  "Don't do very much."
+  (interactive "P")
+  (my-set-mac-font "espresso" 14))
 
 (defun projector (&optional nosplit)
   "Create a large window suitable for coding on a macbook."

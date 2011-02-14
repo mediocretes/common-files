@@ -1,2 +1,2 @@
-(mac-toggle-max-window)
-(medium)
+;; (mac-toggle-max-window)
+(macbook-desk)
