@@ -429,6 +429,9 @@ fi
 #add mongo to path
 export PATH="/mongo/current/bin:${PATH}"
 
+#coreutils
+export PATH="/opt/local/libexec/gnubin:${PATH}"
+
 [[ "$HOME" == "" ]] && export HOME=`grep -e "^[^:]*\:[^:]*\:$UID\:" /etc/passwd | awk -F ':' '{print $6}'`
 
 export BC_ENV_ARGS="$HOME/.bcrc"
