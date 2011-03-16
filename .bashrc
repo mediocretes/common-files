@@ -470,5 +470,5 @@ fi
 
 [ -f ~/.bundler-exec.sh ] && source ~/.bundler-exec.sh
 
-source ~/.cftools
+source ~/.cfcustom
 
