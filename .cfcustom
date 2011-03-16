@@ -1,0 +1,9 @@
+up_mongo()
+{
+    /mongo/mongodb/bin/mongod --dbpath /mongo/data --logpath /mongo/logs/mongo.log --fork
+}
+
+down_mongo()
+{
+    kill $(cat /mongo/data/mongod.lock)
+}

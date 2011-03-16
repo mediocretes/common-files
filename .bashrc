@@ -427,7 +427,7 @@ else
 fi 
 
 #add mongo to path
-export PATH="/mongo/current/bin:${PATH}"
+export PATH="/mongo/mongodb/bin:${PATH}"
 
 #coreutils
 export PATH="/opt/local/libexec/gnubin:${PATH}"
@@ -469,3 +469,6 @@ fi
 
 
 [ -f ~/.bundler-exec.sh ] && source ~/.bundler-exec.sh
+
+source ~/.cftools
+
