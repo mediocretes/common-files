@@ -1,0 +1,3 @@
+cp -fr ~/workspace/common-files/* ~/
+cp -fr ~/workspace/common-files/.??* ~/
+rm -rf ~/.git
