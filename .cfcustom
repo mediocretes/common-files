@@ -1,9 +1,12 @@
-up_mongo()
+updev()
 {
+    sudo nginx
     /mongo/mongodb/bin/mongod --dbpath /mongo/data --logpath /mongo/logs/mongo.log --fork
 }
 
-down_mongo()
+downdev()
 {
+    sudo nginx -s quit
     kill $(cat /mongo/data/mongod.lock)
 }
+
