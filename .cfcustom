@@ -2,11 +2,13 @@ updev()
 {
     sudo nginx
     /mongo/mongodb/bin/mongod --dbpath /mongo/data --logpath /mongo/logs/mongo.log --fork
+    mysql.server start                        
 }
 
 downdev()
 {
     sudo nginx -s quit
     kill $(cat /mongo/data/mongod.lock)
+    mysql.server stop
 }
 
