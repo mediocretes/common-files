@@ -16,7 +16,7 @@ gpm()
 {
     git pull --rebase origin master 
     git push origin master
-    if [ $1 = "i" ]
+    if [ "$1" = "i" ]
     then
         cap intg deploy
     fi
