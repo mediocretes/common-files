@@ -12,11 +12,33 @@ downdev()
     mysql.server stop
 }
 
-gpm()
+gpd()
 {
     git pull --rebase origin master 
     git push origin master
     if [ "$1" = "i" ]
+    then
+        cap intg deploy
+    fi
+}
+
+gpc()
+{
+    git commit -m $1
+    git pull --rebase origin master 
+    git push origin master
+    if [ "$2" = "i" ]
+    then
+        cap intg deploy
+    fi
+}
+
+gpa()
+{
+    git commit -am "$1"
+    git pull --rebase origin master 
+    git push origin master
+    if [ "$2" = "i" ]
     then
         cap intg deploy
     fi
