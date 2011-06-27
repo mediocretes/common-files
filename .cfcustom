@@ -11,3 +11,15 @@ downdev()
     kill $(cat /mongo/data/mongod.lock)
     mysql.server stop
 }
+
+host187()
+{
+    cp /usr/local/etc/nginx/nginxconfig187.conf /usr/local/etc/nginx/nginx.conf
+    sudo nginx -s reload
+}
+
+host192()
+{
+    cp /usr/local/etc/nginx/nginxconfig192.conf /usr/local/etc/nginx/nginx/conf
+    sudo nginx -s reload
+}
