@@ -20,6 +20,6 @@ host187()
 
 host192()
 {
-    cp /usr/local/etc/nginx/nginxconfig192.conf /usr/local/etc/nginx/nginx/conf
+    cp /usr/local/etc/nginx/nginxconfig192.conf /usr/local/etc/nginx/nginx.conf
     sudo nginx -s reload
 }
