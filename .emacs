@@ -53,3 +53,7 @@
 ;; (color-theme-railscasts)
 ;;(load "~/.emacs.d/autoload/colors/themes/color-theme-chocolate-rain.el")
 ;;(color-theme-chocolate-rain)
+
+
+(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t) 
+(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))
