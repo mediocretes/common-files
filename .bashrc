@@ -66,6 +66,8 @@ alias sct='RAILS_ENV="test" sc'
 alias ackp='ack --pager="less -r"'
 alias acki='ack -i'
 
+alias hn='hcl note'
+
 export CF_TARBALL_BACKUP="true"
 export CF_BACKUP_COUNT=5
 cfup() {
@@ -343,6 +345,7 @@ shopt -s cdspell
 #let * match files beginning with '.' but since GLOBIGNORE is set above it won't match '.' or '..'
 shopt -s dotglob
 
+
 FG_BLACK="\[\033[00;30m\]"
 FG_RED="\[\033[00;31m\]"
 FG_GREEN="\[\033[00;32m\]"
@@ -351,6 +354,7 @@ FG_BLUE="\[\033[00;34m\]"
 FG_VIOLET="\[\033[00;35m\]"
 FG_CYAN="\[\033[00;36m\]"
 FG_WHITE="\[\033[00;37m\]"
+NO_COLOR="\[\e[0m\]"
 WHOAMI="`/usr/bin/whoami`"
 HOST="${WHOAMI}@$(echo $HOSTNAME | sed 's/\..*//')"
 
@@ -407,6 +411,7 @@ PS1="${PS1}${FG_RED} \$ ${FG_WHITE}"
 #green prompt
 PS1="${PS1}${FG_WHITE} \$ "
     fi
+
 fi
 
 if [[ $WHOAMI = 'root' ]]; then
@@ -440,7 +445,7 @@ export BC_ENV_ARGS="$HOME/.bcrc"
 export HISTSIZE=5000000
 
 #Repeated commands are only stored once
-export HISTCONTROL=ignoredups
+export HISTCONTROL=ignoreboth
 
 #save history with each command
 export PROMPT_COMMAND='[[ "`set | grep -E \"cf_prompt_command \(\)\"`" != "" ]] && cf_prompt_command'
