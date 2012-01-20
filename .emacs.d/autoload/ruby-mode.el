@@ -1505,6 +1505,11 @@ The variable ruby-indent-level controls the amount of indentation.
 
   (if (fboundp 'run-mode-hooks)
       (run-mode-hooks 'ruby-mode-hook)
-    (run-hooks 'ruby-mode-hook)))
+    (run-hooks 'ruby-mode-hook))
+
+  (set (make-local-variable 'before-save-hook) #'ruby-before-save))
+
+(defun ruby-before-save ()
+  (delete-trailing-whitespace))
 
 (provide 'ruby-mode)
