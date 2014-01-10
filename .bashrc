@@ -300,7 +300,10 @@ cf_prompt_command() {
     [[ "$CF_RUNNING_VERSION" != "$CF_LOCAL_LATEST_VERSION" ]] && exec bash
 #    cf_long_running_task_check
     [[ "`declare -f cf_user_prompt_hook`" != "" ]] && cf_user_prompt_hook
-    BATTERY_PERCENT="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}')"
+
+    # the following line has gotten incredibly slow, but I'm not ready to give up on the concept, so I'm commenting.  Deal with it.
+    # BATTERY_PERCENT="$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}')"
+    BATTERY_PERCENT=66
     let BATTERY="$(echo -n ${BATTERY_PERCENT} | sed 's/\...%//')"
     #does your computer report 99.5% instead of 100%?  You might find the following more useful than sed rounding.
     #let BATTERY="$(echo -n ${BATTERY_PERCENT} | sed 's/[^0-9]//g')"
