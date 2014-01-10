@@ -359,11 +359,6 @@ WHOAMI="`/usr/bin/whoami`"
 HOST="${WHOAMI}@$(echo $HOSTNAME | sed 's/\..*//')"
 
 
-#a battery gauge, in MY prompt?  It's more likely than you'd think
-function battery_int(){    
-    echo "$(ioreg -l | grep -i capacity | tr '\n' ' | ' | awk '{printf("%.2f%%", $10/$5 * 100)}' | sed 's/\...%//')"
-}
-
 last_2_pwd(){
     tmp=${PWD%/*/*}
     [ ${#tmp} -gt 0 -a "$tmp" != "$PWD" ] && echo ${PWD:${#tmp}+1} || echo $PWD
