@@ -6,7 +6,7 @@
 [[ -f $HOME/.bash_completions/git-completion ]] && source $HOME/.bash_completions/git-completion
 
 export INPUTRC="$HOME/.inputrc"
-export EDITOR="/usr/bin/emacs"
+export EDITOR="/usr/bin/emacsclient"
 export GLOBIGNORE='.:..'
 export HISTTIMEFORMAT='%c  '
 export LC_COLLATE="POSIX"
@@ -35,6 +35,8 @@ alias g{='git stash'
 alias g}='git stash apply'
 alias glg='git lg'
 complete -o default -o nospace -F _git_log glg
+alias gdc='git diff --cached'
+complete -o default -o nospace -F _git_diff gdc
 alias gcm='git commit -m'
 alias gc="git commit"
 alias gca='git commit -a'
@@ -62,11 +64,14 @@ alias cuke="cucumber ./features"
 
 alias sc='script/console'
 alias sct='RAILS_ENV="test" sc'
+alias ss='script/server'
 
 alias ackp='ack --pager="less -r"'
 alias acki='ack -i'
+alias a='acki'
 
 alias hn='hcl note'
+alias be='bundle exec'
 
 export CF_TARBALL_BACKUP="true"
 export CF_BACKUP_COUNT=5

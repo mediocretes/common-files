@@ -48,6 +48,7 @@
 				("\\.Capfile$" . ruby-mode)
 				("\\.gemspec$" . ruby-mode)
         ("\\Gemfile$" . ruby-mode)
+        ("\\Capfile$" . ruby-mode)
 				("\\.sass$" . sass-mode)
 				("\\.scss$" . sass-mode)
 				("\\.haml$" . haml-mode)
@@ -111,10 +112,15 @@
   (my-set-mac-font "espresso" 14)
   (arrange-frame 170 45 nosplit))
 
-(defun macbook-desk (&optional nosplit)
-  "Don't do very much."
+;old macbook desk(defun macbook-desk (&optional nosplit)
+;  "Don't do very much."
+;  (interactive "P")
+;  (my-set-mac-font "espresso" 14))
+(defun large (&optional nosplit)
+  "Create a two-pane window suitable for coding on a macbook."
   (interactive "P")
-  (my-set-mac-font "espresso" 14))
+  (my-set-mac-font "espresso" 18)
+  (arrange-frame 170 45 nosplit))
 
 (defun projector (&optional nosplit)
   "Create a large window suitable for coding on a macbook."
