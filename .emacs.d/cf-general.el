@@ -112,10 +112,11 @@
   (my-set-mac-font "espresso" 14)
   (arrange-frame 170 45 nosplit))
 
-;old macbook desk(defun macbook-desk (&optional nosplit)
-;  "Don't do very much."
-;  (interactive "P")
-;  (my-set-mac-font "espresso" 14))
+(defun macbook-desk (&optional nosplit)
+  "Don't do very much."
+  (interactive "P")
+  (my-set-mac-font "espresso" 14))
+
 (defun large (&optional nosplit)
   "Create a two-pane window suitable for coding on a macbook."
   (interactive "P")
