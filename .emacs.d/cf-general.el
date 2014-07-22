@@ -1,3 +1,7 @@
+;; IS YOUR SHIT FUCKED?
+;; https://github.com/emacsmirror/nxhtml is important.
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;This file is organized into sections. The first section is globals, followed
 ;;by sections that are only invoked for specific modes or actions. Hypothetically
@@ -74,6 +78,8 @@
   (add-to-list 'load-path default-directory)
   (normal-top-level-add-subdirs-to-load-path))
 
+(if (file-readable-p "~/workspace/nxhtml/autostart.el")
+    (load "~/workspace/nxhtml/autostart.el"))
 
 ;; moved to before autoload so it's easier to override the default call to it
 (defun mac-toggle-max-window ()
