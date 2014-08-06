@@ -1,8 +1,10 @@
 updev()
 {
 #    sudo nginx
-    /mongo/mongodb/bin/mongod --dbpath /mongo/data --logpath /mongo/logs/mongo.log --fork
+    /mongo/mongodb/bin/mongod --dbpath /mongo/data --logpath /mongo/logs/mongo.log --fork --setParameter enableTestCommands=1
 #    mysql.server start                        
+ /usr/local/sbin/rabbitmq-server start &
+memcached -d
 }
 
 downdev()
