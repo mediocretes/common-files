@@ -443,8 +443,7 @@ fi
 export PATH="/mongo/mongodb/bin:${PATH}"
 
 #coreutils
-export PATH="/opt/local/libexec/gnubin:${PATH}"
-
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 [[ "$HOME" == "" ]] && export HOME=`grep -e "^[^:]*\:[^:]*\:$UID\:" /etc/passwd | awk -F ':' '{print $6}'`
 
 export BC_ENV_ARGS="$HOME/.bcrc"
