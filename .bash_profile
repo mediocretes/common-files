@@ -34,7 +34,7 @@ if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; f
 if [[ -d "$HOME/.rbenv" ]] ; then eval "$($HOME/.rbenv/bin/rbenv init -)"; fi
 
 # Automatic discovery of your code directory
-for dir in ~/code ~/projects; do
+for dir in ~/code ~/projects ~/workspace; do
   if [ -d $dir ]; then
     CODE_DIR=~/code
     break
