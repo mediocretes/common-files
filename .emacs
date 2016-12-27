@@ -22,7 +22,7 @@
 ;; (color-theme-subdued)
 ;; (load "~/.emacs.d/autoload/colors/themes/color-theme-wombat.el")
 ;; (color-theme-wombat)
-(load "~/.emacs.d/autoload/colors/themes/color-theme-twilight.el")
+(load "~/.emacs.d/lisp/autoload/colors/themes/color-theme-twilight.el")
 (color-theme-twilight)
 ;; (load "~/.emacs.d/autoload/colors/themes/color-theme-railscasts.el")
 ;; (color-theme-railscasts)

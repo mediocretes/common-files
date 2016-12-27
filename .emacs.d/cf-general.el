@@ -72,7 +72,7 @@
      (load "/usr/share/emacs/site-lisp/site-gentoo"))
 
 
-(let ((default-directory "~/.emacs.d/"))
+(let ((default-directory "~/.emacs.d/lisp"))
   (add-to-list 'load-path default-directory)
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -153,7 +153,6 @@
 ;; Load paths
 (require 'ruby-mode)
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp-personal"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp/cucumber.el"))
@@ -239,15 +238,6 @@
 
 
 
-(require 'mumamo-fun)
-;; (setq mumamo-chunk-coloring 'submode-colored)
-(setq mumamo-chunk-coloring 'no-chunks-colored)
-(add-to-list 'auto-mode-alist '("\\.rhtml" . eruby-html-mumamo))
-(add-to-list 'auto-mode-alist '("\\.html\\.erb" . eruby-html-mumamo))
-(add-to-list 'auto-mode-alist '("\\.erb" . eruby-html-mumamo))
-
-
-
 ;; our bash wrapper specifies the -il so bash will load all the appropriate files
 ;; might want to change the CFs' bash files to explicitly load all the necessary file (once) but that's more work
 (if (not (getenv "ESHELL"))
@@ -271,19 +261,6 @@
 ;; tell expansion to ignore ":" so you can use symbols nicely.  was nil
 (setq dabbrev-abbrev-skip-leading-regexp "[^ ]*[:*]")
 
-(add-to-list 'load-path "~/.emacs.d/speedbar-0.14beta4")
-(add-to-list 'load-path "~/.emacs.d/eieio-0.17")
-(add-to-list 'load-path "~/.emacs.d/semantic-1.4.4")
-(setq semantic-load-turn-everything-on t)
-(require 'semantic-load)
-
-(add-to-list 'load-path "~/.emacs.d/ecb-2.32")
-(load-file "~/.emacs.d/ecb-2.32/ecb.el")
-
-(setq load-path (cons "~/.emacs.d/rails" load-path))
-(require 'rails)
-
-
 (add-hook 'ruby-mode-hook 
 	  (function (lambda ()
 		      (local-set-key (kbd "<tab>") 'indent-according-to-mode)
@@ -292,16 +269,6 @@
 
 (load-file "~/.emacs.d/lisp/php-mode.el")
 (require 'php-mode)
-
-(load-file "~/.emacs.d/haml/haml-mode.el")
-(require 'haml-mode)
-
-(load-file "~/.emacs.d/sass/sass-mode.el")
-(require 'sass-mode)
-
-(set-face-background 'flymake-errline "red4")
-(set-face-background 'flymake-warnline "dark slate blue")
-
 
 ;; I hate tabs!
 (setq-default indent-tabs-mode nil)
